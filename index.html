@@ -605,7 +605,7 @@ canvas {
   // 4. INTERFERENCE — standing wave / ripple pattern
   function drawInterference(x0, y0, w, h, alpha = 1) {
     const maxR = Math.min(w, h) * 0.46;
-    const rings = Math.round(4 + sCentroid / 500);
+    const rings = Math.round(7 + sCentroid / 500);
     const waveFreq = 2 + sBass * 4;
     const distortion = sMid * 0.2 + sHighMid * 0.1;
 
@@ -613,13 +613,13 @@ canvas {
     ctx.globalAlpha = alpha;
 
     // Source 1 offset
-    const s1x = x0 - maxR * 0.25 * (1 + sBass * 0.5);
+    const s1x = x0 - maxR * 0.45 * (1 + sBass * 0.5);
     const s1y = y0 + Math.sin(t * 0.3) * maxR * 0.1;
     // Source 2 offset
-    const s2x = x0 + maxR * 0.25 * (1 + sHighMid * 0.5);
+    const s2x = x0 + maxR * 0.45 * (1 + sHighMid * 0.5);
     const s2y = y0 - Math.sin(t * 0.3) * maxR * 0.1;
 
-    const res = 2;
+    const res = 1.75;
     for (let px = x0 - maxR; px <= x0 + maxR; px += res) {
       for (let py = y0 - maxR; py <= y0 + maxR; py += res) {
         const d1 = Math.hypot(px - s1x, py - s1y);
@@ -635,7 +635,7 @@ canvas {
         const fade = Math.max(0, 1 - dist / maxR);
 
         const hue = sHue + interference * 100 + sTreble * 80;
-        const brightness = 30 + energy * 40;
+        const brightness = 40 + energy * 40;
         const sat = 70 + sBass * 30;
         const a = energy * fade * (0.5 + sRMS * 0.5) * 0.6;
 
