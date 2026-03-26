@@ -19,6 +19,7 @@ body {
 }
 
 canvas {
+  background: #040622;
   position: fixed;
   inset: 0;
   width: 100%;
@@ -401,8 +402,8 @@ canvas {
   // 1. LISSAJOUS — mic drives two oscillators, voice energy controls deviation
   function drawLissajous(x0, y0, w, h, alpha = 1) {
     const r = Math.min(w, h) * 0.42;
-    const freqRatioA = 1 + sBass * 1;       // x-frequency
-    const freqRatioB = 2 + sHighMid * 2;    // y-frequency
+    const freqRatioA = 5 + sBass * 1;       // x-frequency
+    const freqRatioB = 7 + sHighMid * 2;    // y-frequency
     const phaseShift = t * 0.3 + sMid * Math.PI;
     const steps = 600 + Math.floor(sCentroid / 80);
     const hueBase = sHue;
@@ -419,20 +420,12 @@ canvas {
 
     // Draw full parametric curve (static, gorgeous pattern)
     ctx.beginPath();
-    /*
     for (let i = 0; i <= steps; i++) {
       const p = (i / steps) * Math.PI * 2;
       const lx = x0 + Math.sin(freqRatioA * p + phaseShift) * r * (0.7 + sRMS * 0.5);
       const ly = y0 + Math.sin(freqRatioB * p) * r * (0.7 + sBass * 0.4);
       i === 0 ? ctx.moveTo(lx, ly) : ctx.lineTo(lx, ly);
     }
-    */
-    for (let i = 0; i <= steps; i++) {
-      const p = (i / steps) * Math.PI * 2;
-      // Infinity curve (Lissajous 1:2)
-      const lx = x0 + Math.sin(p + phaseShift) * r;
-      const ly = y0 + Math.sin(2 * p) * r;
-    
       i === 0 ? ctx.moveTo(lx, ly) : ctx.lineTo(lx, ly);
     }
     ctx.strokeStyle = hsl(hueBase, 40, 60, 0.12 + sBass * 0.15);
@@ -470,7 +463,7 @@ canvas {
   // 2. MANDALA — polar pattern driven by frequency bands
   function drawMandala(x0, y0, w, h, alpha = 1) {
     const r = Math.min(w, h) * 0.42;
-    const petals = Math.round(7 + sCentroid / 300);
+    const petals = Math.round(10 + sCentroid / 300);
     const rotSpeed = sMid * 0.04 + 0.003;
     const innerR = r * (0.15 + sBass * 0.3);
     const outerR = r * (0.5 + sRMS * 0.5);
@@ -543,7 +536,7 @@ canvas {
     ctx.globalAlpha = alpha;
 
     const speed = 0.7 + sMid * 4;
-    const spread = 1.0 + sRMS * 0.6;
+    const spread = 2.0 + sRMS * 0.6;
 
     // Update + draw particles
     for (let i = 0; i < particles.length; i++) {
@@ -568,7 +561,7 @@ canvas {
     }
 
     // Draw connections between nearby particles
-    const connectDist = 40 + sBass * 60;
+    const connectDist = 60 + sBass * 60;
     ctx.lineWidth = 0.4;
     ctx.shadowBlur = 0;
     for (let i = 0; i < particles.length; i += 2) {
@@ -625,7 +618,7 @@ canvas {
     const s2x = x0 + maxR * 0.25 * (1 + sHighMid * 0.5);
     const s2y = y0 - Math.sin(t * 0.3) * maxR * 0.1;
 
-    const res = 2;
+    const res = 1.25;
     for (let px = x0 - maxR; px <= x0 + maxR; px += res) {
       for (let py = y0 - maxR; py <= y0 + maxR; py += res) {
         const d1 = Math.hypot(px - s1x, py - s1y);
