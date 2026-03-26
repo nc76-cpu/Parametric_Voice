@@ -426,8 +426,7 @@ canvas {
       const ly = y0 + Math.sin(freqRatioB * p) * r * (0.7 + sBass * 0.4);
       i === 0 ? ctx.moveTo(lx, ly) : ctx.lineTo(lx, ly);
     }
-      i === 0 ? ctx.moveTo(lx, ly) : ctx.lineTo(lx, ly);
-    }
+
     ctx.strokeStyle = hsl(hueBase, 40, 60, 0.12 + sBass * 0.15);
     ctx.lineWidth = 1;
     ctx.shadowBlur = 0;
