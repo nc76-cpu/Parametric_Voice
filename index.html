@@ -618,7 +618,7 @@ canvas {
     const s2x = x0 + maxR * 0.25 * (1 + sHighMid * 0.5);
     const s2y = y0 - Math.sin(t * 0.3) * maxR * 0.1;
 
-    const res = 1.75;
+    const res = 2;
     for (let px = x0 - maxR; px <= x0 + maxR; px += res) {
       for (let py = y0 - maxR; py <= y0 + maxR; py += res) {
         const d1 = Math.hypot(px - s1x, py - s1y);
