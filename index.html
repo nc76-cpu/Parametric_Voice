@@ -365,7 +365,7 @@ canvas {
       const src = audioCtx.createMediaStreamSource(stream);
       analyser = audioCtx.createAnalyser();
       analyser.fftSize = 2048;
-      analyser.smoothingTimeConstant = 0.75;
+      analyser.smoothingTimeConstant = 0.95;
       src.connect(analyser);
       freqData = new Uint8Array(analyser.frequencyBinCount);
       timeData = new Uint8Array(analyser.fftSize);
@@ -401,8 +401,8 @@ canvas {
   // 1. LISSAJOUS — mic drives two oscillators, voice energy controls deviation
   function drawLissajous(x0, y0, w, h, alpha = 1) {
     const r = Math.min(w, h) * 0.42;
-    const freqRatioA = 2 + sBass * 3;       // x-frequency
-    const freqRatioB = 3 + sHighMid * 2;    // y-frequency
+    const freqRatioA = 1 + sBass * 1;       // x-frequency
+    const freqRatioB = 2 + sHighMid * 2;    // y-frequency
     const phaseShift = t * 0.3 + sMid * Math.PI;
     const steps = 600 + Math.floor(sCentroid / 80);
     const hueBase = sHue;
@@ -425,7 +425,7 @@ canvas {
       const ly = y0 + Math.sin(freqRatioB * p) * r * (0.7 + sBass * 0.4);
       i === 0 ? ctx.moveTo(lx, ly) : ctx.lineTo(lx, ly);
     }
-    ctx.strokeStyle = hsl(hueBase, 80, 55, 0.12 + sBass * 0.15);
+    ctx.strokeStyle = hsl(hueBase, 40, 60, 0.12 + sBass * 0.15);
     ctx.lineWidth = 1;
     ctx.shadowBlur = 0;
     ctx.stroke();
@@ -446,20 +446,41 @@ canvas {
     }
 
     // Live dot
+    /*
     ctx.beginPath();
     ctx.arc(px, py, 3 + sRMS * 12, 0, Math.PI * 2);
-    ctx.fillStyle = hsl(hueBase, 100, 90, 0.9);
+    ctx.fillStyle = hsl(hueBase, 120, 30, 0.9);
     ctx.shadowBlur = 20 + sRMS * 40;
     ctx.shadowColor = hsl(hueBase, 100, 80);
     ctx.fill();
     ctx.shadowBlur = 0;
+    ctx.restore();
+    */
+    // Arrow instead of dot
+    ctx.save();
+    ctx.translate(px, py);
+    ctx.rotate(angle); // angle should match your direction of motion
+    
+    const size = 12 + sRMS * 20;
+    
+    ctx.beginPath();
+    ctx.moveTo(0, -size);          // tip
+    ctx.lineTo(size * 0.4, size);  // right wing
+    ctx.lineTo(-size * 0.4, size); // left wing
+    ctx.closePath();
+    
+    ctx.fillStyle = hsl(hueBase, 120, 30, 0.9);
+    ctx.shadowBlur = 20 + sRMS * 40;
+    ctx.shadowColor = hsl(hueBase, 100, 80);
+    ctx.fill();
+    
     ctx.restore();
   }
 
   // 2. MANDALA — polar pattern driven by frequency bands
   function drawMandala(x0, y0, w, h, alpha = 1) {
     const r = Math.min(w, h) * 0.42;
-    const petals = Math.round(4 + sCentroid / 300);
+    const petals = Math.round(7 + sCentroid / 300);
     const rotSpeed = sMid * 0.04 + 0.003;
     const innerR = r * (0.15 + sBass * 0.3);
     const outerR = r * (0.5 + sRMS * 0.5);
@@ -531,8 +552,8 @@ canvas {
     ctx.save();
     ctx.globalAlpha = alpha;
 
-    const speed = 0.5 + sMid * 3;
-    const spread = 0.8 + sRMS * 0.5;
+    const speed = 0.7 + sMid * 4;
+    const spread = 1.0 + sRMS * 0.6;
 
     // Update + draw particles
     for (let i = 0; i < particles.length; i++) {
@@ -545,8 +566,8 @@ canvas {
       // Hue follows dominant freq
       p.hue += (sHue + p.orbitAngle * 20 - p.hue) * 0.02;
 
-      const brightness = 40 + sTreble * 35 + sRMS * 25;
-      const size = p.size * (1 + sRMS * 4 + sBass * 2);
+      const brightness = 30 + sTreble * 25 + sRMS * 20;
+      const size = p.size * (1 + sRMS * 6 + sBass * 3);
 
       ctx.beginPath();
       ctx.arc(px, py, size, 0, Math.PI * 2);
@@ -557,7 +578,7 @@ canvas {
     }
 
     // Draw connections between nearby particles
-    const connectDist = 60 + sBass * 80;
+    const connectDist = 40 + sBass * 60;
     ctx.lineWidth = 0.4;
     ctx.shadowBlur = 0;
     for (let i = 0; i < particles.length; i += 2) {
@@ -580,7 +601,8 @@ canvas {
     }
 
     // Nucleus
-    const nucR = 8 + sRMS * 30 + sBass * 20;
+    //const nucR = 8 + sRMS * 30 + sBass * 20;
+    const nucR = 6 + sRMS * 40 + sBass * 30;
     const ng = ctx.createRadialGradient(x0, y0, 0, x0, y0, nucR);
     ng.addColorStop(0, hsl(sHue, 100, 98, 0.95));
     ng.addColorStop(0.5, hsl(sHue + 40, 90, 65, 0.5));
@@ -599,9 +621,9 @@ canvas {
   // 4. INTERFERENCE — standing wave / ripple pattern
   function drawInterference(x0, y0, w, h, alpha = 1) {
     const maxR = Math.min(w, h) * 0.46;
-    const rings = Math.round(6 + sCentroid / 400);
-    const waveFreq = 3 + sBass * 5;
-    const distortion = sMid * 0.35 + sHighMid * 0.2;
+    const rings = Math.round(4 + sCentroid / 500);
+    const waveFreq = 2 + sBass * 4;
+    const distortion = sMid * 0.2 + sHighMid * 0.1;
 
     ctx.save();
     ctx.globalAlpha = alpha;
@@ -613,7 +635,7 @@ canvas {
     const s2x = x0 + maxR * 0.25 * (1 + sHighMid * 0.5);
     const s2y = y0 - Math.sin(t * 0.3) * maxR * 0.1;
 
-    const res = 3;
+    const res = 2;
     for (let px = x0 - maxR; px <= x0 + maxR; px += res) {
       for (let py = y0 - maxR; py <= y0 + maxR; py += res) {
         const d1 = Math.hypot(px - s1x, py - s1y);
@@ -628,10 +650,10 @@ canvas {
         const dist = Math.min(d1, d2);
         const fade = Math.max(0, 1 - dist / maxR);
 
-        const hue = sHue + interference * 80 + sTreble * 60;
-        const brightness = 35 + energy * 50;
+        const hue = sHue + interference * 100 + sTreble * 80;
+        const brightness = 30 + energy * 40;
         const sat = 70 + sBass * 30;
-        const a = energy * fade * (0.5 + sRMS * 0.5) * 0.85;
+        const a = energy * fade * (0.5 + sRMS * 0.5) * 0.6;
 
         ctx.fillStyle = hsl(hue, sat, brightness, a);
         ctx.fillRect(px - res / 2, py - res / 2, res, res);
@@ -645,7 +667,7 @@ canvas {
       sg.addColorStop(0.4, hsl(sHue + 40, 90, 65, 0.4));
       sg.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.beginPath();
-      ctx.arc(sx, sy, 18 + sRMS * 25, 0, Math.PI * 2);
+      ctx.arc(sx, sy, 22 + sRMS * 30, 0, Math.PI * 2);
       ctx.fillStyle = sg;
       ctx.shadowBlur = 20 + sRMS * 40;
       ctx.shadowColor = hsl(sHue, 100, 80);
