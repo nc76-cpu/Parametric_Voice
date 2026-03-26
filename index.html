@@ -549,7 +549,9 @@ canvas {
       p.hue += (sHue + p.orbitAngle * 20 - p.hue) * 0.02;
 
       const brightness = 30 + sTreble * 25 + sRMS * 20;
-      const size = p.size * (1 + sRMS * 6 + sBass * 3);
+      const twinkle = 0.3 + Math.sin(t * 8 + p.orbitAngle * 3) * 0.15;
+      const size = p.size * (1 + sRMS * 6 + sBass * 3) * twinkle;
+
 
       ctx.beginPath();
       ctx.arc(px, py, size, 0, Math.PI * 2);
@@ -576,7 +578,7 @@ canvas {
           ctx.beginPath();
           ctx.moveTo(px, py);
           ctx.lineTo(qx, qy);
-          ctx.strokeStyle = hsl(p.hue, 70, 65, (1 - d / connectDist) * 0.35);
+          ctx.strokeStyle = hsl(p.hue + 20, 70, 70, (1 - d / connectDist) * 0.35);
           ctx.stroke();
         }
       }
