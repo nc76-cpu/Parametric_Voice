@@ -11,7 +11,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  background: #000;
+  background: #040622;
   overflow: hidden;
   width: 100vw;
   height: 100vh;
@@ -419,10 +419,20 @@ canvas {
 
     // Draw full parametric curve (static, gorgeous pattern)
     ctx.beginPath();
+    /*
     for (let i = 0; i <= steps; i++) {
       const p = (i / steps) * Math.PI * 2;
       const lx = x0 + Math.sin(freqRatioA * p + phaseShift) * r * (0.7 + sRMS * 0.5);
       const ly = y0 + Math.sin(freqRatioB * p) * r * (0.7 + sBass * 0.4);
+      i === 0 ? ctx.moveTo(lx, ly) : ctx.lineTo(lx, ly);
+    }
+    */
+    for (let i = 0; i <= steps; i++) {
+      const p = (i / steps) * Math.PI * 2;
+      // Infinity curve (Lissajous 1:2)
+      const lx = x0 + Math.sin(p + phaseShift) * r;
+      const ly = y0 + Math.sin(2 * p) * r;
+    
       i === 0 ? ctx.moveTo(lx, ly) : ctx.lineTo(lx, ly);
     }
     ctx.strokeStyle = hsl(hueBase, 40, 60, 0.12 + sBass * 0.15);
