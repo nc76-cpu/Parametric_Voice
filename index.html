@@ -446,7 +446,6 @@ canvas {
     }
 
     // Live dot
-    /*
     ctx.beginPath();
     ctx.arc(px, py, 3 + sRMS * 12, 0, Math.PI * 2);
     ctx.fillStyle = hsl(hueBase, 120, 30, 0.9);
@@ -455,26 +454,7 @@ canvas {
     ctx.fill();
     ctx.shadowBlur = 0;
     ctx.restore();
-    */
-    // Arrow instead of dot
-    ctx.save();
-    ctx.translate(px, py);
-    ctx.rotate(angle); // angle should match your direction of motion
-    
-    const size = 12 + sRMS * 20;
-    
-    ctx.beginPath();
-    ctx.moveTo(0, -size);          // tip
-    ctx.lineTo(size * 0.4, size);  // right wing
-    ctx.lineTo(-size * 0.4, size); // left wing
-    ctx.closePath();
-    
-    ctx.fillStyle = hsl(hueBase, 120, 30, 0.9);
-    ctx.shadowBlur = 20 + sRMS * 40;
-    ctx.shadowColor = hsl(hueBase, 100, 80);
-    ctx.fill();
-    
-    ctx.restore();
+
   }
 
   // 2. MANDALA — polar pattern driven by frequency bands
@@ -700,19 +680,19 @@ canvas {
       const peak = getPeakFreq(freqData, sr);
       const centroid = getSpectralCentroid(freqData, sr);
 
-      const sm = 0.12;
-      sRMS     = sRMS     * (1 - sm) + rms     * sm * 5;
-      sBass    = sBass    * (1 - sm) + bass    * sm * 3;
+      const sm = 0.08;
+      sRMS = sRMS * (1 - sm) + rms * sm * 3;
+      sBass = sBass * (1 - sm) + bass * sm * 4;
       sLowMid  = sLowMid  * (1 - sm) + lowmid  * sm * 3;
-      sMid     = sMid     * (1 - sm) + mid      * sm * 3;
+      sMid = sMid * (1 - sm) + mid * sm * 2;
       sHighMid = sHighMid * (1 - sm) + highmid * sm * 3;
-      sTreble  = sTreble  * (1 - sm) + treble  * sm * 3;
+      sTreble = sTreble * (1 - sm) + treble * sm * 4;
       sPeakFreq = sPeakFreq * 0.9 + peak * 0.1;
       sCentroid = sCentroid * 0.9 + centroid * 0.1;
 
       // Map peak freq to hue: low=pink/red, mid=green/cyan, high=violet
       const targetHue = (sPeakFreq / 800) * 200 + 160;
-      sHue = sHue * 0.93 + targetHue * 0.07;
+      sHue = sHue * 0.85 + targetHue * 0.15;
 
       // Update sidebar bars
       document.getElementById('bar-bass').style.width = Math.min(100, sBass * 100) + '%';
