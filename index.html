@@ -727,8 +727,11 @@ canvas {
 
     // ── Draw ──
     // Fade trail
-    ctx.fillStyle = `rgba(0,0,0,${0.12 + (1 - sRMS) * 0.08})`;
+    //ctx.fillStyle = `rgba(0,0,0,${0.12 + (1 - sRMS) * 0.08})`;
+    //ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = `rgba(4, 6, 34, ${0.12 + (1 - sRMS) * 0.08})`; // your #040622
     ctx.fillRect(0, 0, W, H);
+
 
     if (mode === 4) {
       // All modes in quadrants
