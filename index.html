@@ -622,27 +622,29 @@ canvas {
     const res = 1.75;
     for (let px = x0 - maxR; px <= x0 + maxR; px += res) {
       for (let py = y0 - maxR; py <= y0 + maxR; py += res) {
+        const r = Math.hypot(px - x0, py - y0);
+        if (r > maxR) continue;
         const d1 = Math.hypot(px - s1x, py - s1y);
         const d2 = Math.hypot(px - s2x, py - s2y);
         if (d1 > maxR || d2 > maxR) continue;
-
+    
         const wave1 = Math.sin(d1 * 0.06 * waveFreq - t * 2 + distortion * Math.sin(d2 * 0.04));
         const wave2 = Math.sin(d2 * 0.06 * waveFreq - t * 2 + distortion * Math.sin(d1 * 0.04));
         const interference = (wave1 + wave2) * 0.5;
-
+    
         const energy = (interference + 1) * 0.5;
         const dist = Math.min(d1, d2);
         const fade = Math.max(0, 1 - dist / maxR);
-
+    
         const hue = sHue + interference * 100 + sTreble * 80;
         const brightness = 40 + energy * 40;
         const sat = 70 + sBass * 30;
         const a = energy * fade * (0.5 + sRMS * 0.5) * 0.6;
-
+    
         ctx.fillStyle = hsl(hue, sat, brightness, a);
         ctx.fillRect(px - res / 2, py - res / 2, res, res);
       }
-    }
+}
 
     // Glowing source nodes
     for (const [sx, sy] of [[s1x, s1y], [s2x, s2y]]) {
