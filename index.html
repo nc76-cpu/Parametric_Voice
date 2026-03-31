@@ -613,10 +613,10 @@ canvas {
     ctx.globalAlpha = alpha;
 
     // Source 1 offset
-    const s1x = x0 - maxR * 0.45 * (1 + sBass * 0.2);
+    const s1x = x0 - maxR * 0.25 * (1 + sBass * 0.2);
     const s1y = y0 + Math.sin(t * 0.3) * maxR * 0.1;
     // Source 2 offset
-    const s2x = x0 + maxR * 0.45 * (1 + sHighMid * 0.2);
+    const s2x = x0 + maxR * 0.25 * (1 + sHighMid * 0.2);
     const s2y = y0 - Math.sin(t * 0.3) * maxR * 0.1;
 
     const res = 1.75;
